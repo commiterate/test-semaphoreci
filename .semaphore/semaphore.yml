@@ -1,0 +1,29 @@
+version: v1.0
+name: Source
+agent:
+  machine:
+    type: f1-standard-2
+    os_image: ubuntu2004
+queue:
+  name: Source
+  scope: project
+  when: branch = 'main'
+auto_cancel:
+  queued:
+    when: branch = 'main'
+fail_fast:
+  stop:
+    when: 'true'
+blocks:
+  - name: Build
+    task:
+      jobs:
+        - name: Build
+          commands:
+            - echo "Build"
+promotions:
+  - name: Staging
+    pipeline_file: staging.yml
+    deployment_target: Staging
+    auto_promote:
+      when: branch = 'main' AND result = 'passed'

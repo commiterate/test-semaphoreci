@@ -1,0 +1,31 @@
+version: v1.0
+name: Production (Rollback)
+agent:
+  machine:
+    type: f1-standard-2
+    os_image: ubuntu2004
+queue:
+  name: Production
+  scope: project
+auto_cancel:
+  queued:
+    when: 'true'
+fail_fast:
+  stop:
+    when: 'true'
+blocks:
+  - name: Prepare
+    task:
+      jobs:
+        - name: Deploy
+          commands:
+            - echo "Deploy"
+  - name: Commit
+    task:
+      jobs:
+        - name: Test
+          commands:
+            - echo "Test"
+        - name: Monitor
+          commands:
+            - echo "Monitor"
